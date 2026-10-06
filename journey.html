@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jayr Deloao — My Journey</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="cross" aria-hidden="true">
+    <div class="band one"></div>
+    <div class="band two"></div>
+  </div>
+  <nav>
+    <div class="logo">
+      jay<span>store</span>
+    </div>
+
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="shop.html">Shop Gear</a></li>
+      <li><a href="music.html">Music</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+  </nav>
+  <section class="journey" id="journey">
+    <h2>My Journey</h2>
+    <div class="journey-grid">
+      <article class="journey-card" data-modal="progressModal" role="button" tabindex="0" aria-controls="progressModal">
+        <span>01 / Progress</span>
+        <h3>Before / After Progress</h3>
+      </article>
+      <article class="journey-card" data-modal="routineModal" role="button" tabindex="0" aria-controls="routineModal">
+        <span>02 / Routine</span>
+        <h3>Training Routine</h3>
+      </article>
+    </div>
+  </section><dialog id="progressModal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-label">01 / Progress</div>
+        <h2>Before / After</h2>
+      </div>
+      <button class="modal-close" type="button" aria-label="Close progress window">x</button>
+    </div>
+    <div class="modal-body">
+      <p class="progress-intro">Ilagay dito ang pictures mo para makita ang progress pagkatapos ng 1 year at kalahating buwan sa gym. Pumili ng image sa bawat box.</p>
+      <div class="progress-photos">
+        <label class="photo-upload">
+          <strong>Before</strong>
+          <span>Unang picture</span>
+          <input type="file" accept="image/*" data-preview="beforePreview" />
+          <img id="beforePreview" class="photo-preview" alt="Before progress preview" />
+        </label>
+        <label class="photo-upload">
+          <strong>After</strong>
+          <span>Latest progress picture</span>
+          <input type="file" accept="image/*" data-preview="afterPreview" />
+          <img id="afterPreview" class="photo-preview" alt="After progress preview" />
+        </label>
+      </div>
+    </div>
+  </dialog><dialog id="routineModal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-label">02 / Routine</div>
+        <h2>Training Routine</h2>
+      </div>
+      <button class="modal-close" type="button" aria-label="Close routine window">x</button>
+    </div>
+    <div class="modal-body">
+      <p class="progress-intro">Piliin kung ilang araw kada linggo ang gusto mong training. Pwede nating palitan ang exercises kapag binigay mo na ang sarili mong workout list.</p>
+      <div class="routine-tabs" role="tablist" aria-label="Routine length">
+        <button class="routine-tab active" type="button" data-days="3" role="tab">3 Days</button>
+        <button class="routine-tab" type="button" data-days="4" role="tab">4 Days</button>
+        <button class="routine-tab" type="button" data-days="5" role="tab">5 Days</button>
+        <button class="routine-tab" type="button" data-days="7" role="tab">7 Days</button>
+      </div>
+      <div class="routine-list" id="routineList"></div>
+    </div>
+  </dialog>
+  <script src="script.js"></script>
+</body>
+</html>

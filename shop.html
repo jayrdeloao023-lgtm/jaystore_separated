@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jayr Deloao — Shop Gear</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="cross" aria-hidden="true">
+    <div class="band one"></div>
+    <div class="band two"></div>
+  </div>
+  <nav>
+    <div class="logo">
+      jay<span>store</span>
+    </div>
+
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="shop.html">Shop Gear</a></li>
+      <li><a href="music.html">Music</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+  </nav>
+  <section class="shop" id="shop">
+    <p class="shop-tagline">Start build your muscle</p>
+    <div class="shop-heading">
+      <h2>Shop Gear</h2>
+      <span class="cart-count" id="cartCount">Cart: 0</span>
+    </div>
+    <form class="search-form" role="search">
+      <input type="search" aria-label="Search gym store" placeholder="Search gym essentials" />
+      <button type="submit" aria-label="Submit search">Go</button>
+    </form>
+    <div class="product-grid" id="productGrid">
+      <article class="product-card" data-product="dumbbell">
+        <div class="product-image">DB 20</div>
+        <h3>Power Dumbbell Set</h3>
+        <p>Heavy-duty training pair</p>
+        <div class="product-footer"><span class="product-price">$49</span><button class="add-cart" type="button">Add to cart</button></div>
+      </article>
+      <article class="product-card" data-product="band resistance">
+        <div class="product-image">BAND</div>
+        <h3>Resistance Band Kit</h3>
+        <p>Portable full-body training</p>
+        <div class="product-footer"><span class="product-price">$24</span><button class="add-cart" type="button">Add to cart</button></div>
+      </article>
+      <article class="product-card" data-product="shaker bottle">
+        <div class="product-image">SHAKE</div>
+        <h3>Built Shaker Bottle</h3>
+        <p>Leak-proof gym essential</p>
+        <div class="product-footer"><span class="product-price">$15</span><button class="add-cart" type="button">Add to cart</button></div>
+      </article>
+      <article class="product-card" data-product="protein fuel whey supplement">
+        <div class="product-image">FUEL</div>
+        <h3>Performance Whey</h3>
+        <p>Post-workout protein fuel</p>
+        <div class="product-footer"><span class="product-price">$39</span><button class="add-cart" type="button">Add to cart</button></div>
+      </article>
+      <article class="product-card" data-product="lifting gloves training gloves">
+        <div class="product-image">GRIP</div>
+        <h3>Power Grip Gloves</h3>
+        <p>Secure support for heavy lifts</p>
+        <div class="product-footer"><span class="product-price">$19</span><button class="add-cart" type="button">Add to cart</button></div>
+      </article>
+      <article class="product-card" data-product="training belt lifting belt">
+        <div class="product-image">CORE</div>
+        <h3>Core Lifting Belt</h3>
+        <p>Strong support for every set</p>
+        <div class="product-footer"><span class="product-price">$29</span><button class="add-cart" type="button">Add to cart</button></div>
+      </article>
+    </div>
+  </section>
+  <script src="script.js"></script>
+</body>
+</html>
