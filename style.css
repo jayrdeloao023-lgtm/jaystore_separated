@@ -1400,6 +1400,7 @@
     color: var(--white);
     user-select: none;
     touch-action: none;
+    cursor: grab;
     transition: opacity 0.2s, transform 0.2s;
   }
 
@@ -1417,18 +1418,6 @@
 
   .floating-player.is-snapping {
     transition: top 0.22s ease, left 0.22s ease;
-  }
-
-  .fp-handle {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    cursor: grab;
-    border-radius: 18px;
-  }
-
-  .floating-player.is-dragging .fp-handle {
-    cursor: grabbing;
   }
 
   .fp-art {
@@ -1612,18 +1601,6 @@
   .fp-close:hover {
     opacity: 1;
     transform: scale(1.08);
-  }
-
-  .fp-btn,
-  .fp-volume-wrap,
-  .fp-progress-wrap,
-  .fp-info {
-    position: relative;
-    z-index: 3;
-  }
-
-  .fp-handle {
-    z-index: 1;
   }
 
   .spotify-track.active,
