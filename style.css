@@ -1081,6 +1081,11 @@
   }
 
   dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
     width: min(900px, calc(100% - 2rem));
     max-height: calc(100vh - 2rem);
     padding: 0;
@@ -1376,6 +1381,150 @@
 
   .routine-video.has-video video {
     display: block;
+  }
+
+  .workout {
+    position: relative;
+    z-index: 1;
+    max-width: 1060px;
+    margin: 0 auto;
+    padding: 4rem 3rem 6rem;
+  }
+
+  .workout-tagline {
+    margin-bottom: 0.6rem;
+    color: var(--red);
+    font-family: 'Anton', Impact, sans-serif;
+    font-size: clamp(2rem, 5vw, 4.5rem);
+    line-height: 0.9;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .workout-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .workout-heading h2 {
+    color: var(--white);
+    font-family: 'Anton', Impact, sans-serif;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 400;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .workout-label {
+    color: var(--red);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .workout-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .workout-tab {
+    border: 1px solid #52525b;
+    padding: 0.65rem 1rem;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: border-color 0.2s, background 0.2s, color 0.2s;
+  }
+
+  .workout-tab:hover,
+  .workout-tab.active {
+    border-color: var(--red);
+    background: var(--red);
+    color: var(--white);
+  }
+
+  .workout-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .workout-card {
+    position: relative;
+    padding: 1rem;
+    border: 1px solid #3f3f46;
+    background: #181818;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.2s, transform 0.2s;
+  }
+
+  .workout-thumb {
+    display: grid;
+    aspect-ratio: 1.4;
+    place-items: center;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #292929, #090909);
+    color: var(--red);
+    font-size: 2.2rem;
+  }
+
+  .workout-card h3 {
+    color: var(--white);
+    font-size: 1rem;
+    text-transform: uppercase;
+  }
+
+  .workout-card p {
+    margin-top: 0.35rem;
+    color: var(--muted);
+    font-size: 0.75rem;
+  }
+
+  .workout-card::after {
+    content: "OPEN →";
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+    color: var(--muted);
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+  }
+
+  .workout-card:hover,
+  .workout-card:focus-visible {
+    background: #232323;
+    outline: none;
+    transform: translateY(-3px);
+  }
+
+  .workout-card:focus-visible {
+    box-shadow: inset 0 0 0 2px var(--red);
+  }
+
+  .workout-modal-body {
+    padding: 1.5rem;
+  }
+
+  .workout-modal-body video {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    max-height: 62vh;
+    margin: 0 auto;
+    background: #000;
   }
 
   /* ---- Floating persistent player ---- */
@@ -1721,5 +1870,13 @@
 
     .routine-video video {
       height: 150px;
+    }
+
+    .workout {
+      padding: 3rem 1rem 4rem;
+    }
+
+    .workout-grid {
+      grid-template-columns: 1fr;
     }
   }

@@ -11,7 +11,7 @@
 (function () {
   'use strict';
 
-  const SCRIPT_VERSION = 'jaystore-player-v4';
+  const SCRIPT_VERSION = 'jaystore-player-v5';
   console.log('[Jaystore] script loaded:', SCRIPT_VERSION);
 
   // ── PAGE DETECTION ───────────────────────────────────────────────────────
@@ -45,7 +45,7 @@
 
   // ── NAVIGATION CONFIG ────────────────────────────────────────────────────
   // These are the only pages that should be swapped without a full reload.
-  const INTERNAL_PATHS = ['index.html', 'about.html', 'shop.html', 'music.html', 'journey.html'];
+  const INTERNAL_PATHS = ['index.html', 'about.html', 'shop.html', 'music.html', 'journey.html', 'workout.html'];
   const BASE_PATH = location.pathname.replace(/[^/]+$/, '') || '/';
 
   // ── HELPERS ──────────────────────────────────────────────────────────────
@@ -781,6 +781,7 @@
     highlightActiveTrack();
     bindJourneyFeatures();
     bindShopFeatures();
+    bindWorkoutFeatures();
 
     if (!restoringState && currentIndex >= 0) {
       updatePlayerUI();
@@ -899,6 +900,74 @@
         });
       });
     }
+  }
+
+  /**
+   * Workout page: muscle-group tabs and a video modal.
+   * Each tutorial card carries its video src + title in data attributes.
+   */
+  function bindWorkoutFeatures() {
+    const tabs  = document.querySelectorAll('.workout-tab');
+    const cards = document.querySelectorAll('.workout-card');
+    const modal = document.getElementById('workoutModal');
+    const video = document.getElementById('workoutVideo');
+    const title = document.getElementById('workoutModalTitle');
+    if (!tabs.length && !modal) return;
+
+    // Show only the cards belonging to one muscle group.
+    function showGroup(group) {
+      cards.forEach(card => {
+        card.style.display = (card.dataset.group === group) ? '' : 'none';
+      });
+    }
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => {
+          t.classList.remove('active');
+          t.setAttribute('aria-selected', 'false');
+        });
+        tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
+        showGroup(tab.dataset.group);
+      });
+    });
+
+    if (modal && video) {
+      // Open the modal and start playback for a card.
+      function openCard(card) {
+        title.textContent = card.dataset.title || 'Workout tutorial';
+        video.src = card.dataset.src;
+        video.load();
+        if (modal.showModal) modal.showModal();
+        const p = video.play();
+        if (p && p.catch) p.catch(() => {});
+      }
+
+      cards.forEach(card => {
+        card.addEventListener('click', () => openCard(card));
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openCard(card);
+          }
+        });
+      });
+
+      // Stop playback and unload the video when the modal closes.
+      modal.querySelectorAll('.modal-close').forEach(btn => {
+        btn.addEventListener('click', () => {
+          modal.close();
+          video.pause();
+          video.removeAttribute('src');
+          video.load();
+        });
+      });
+    }
+
+    // Initial render matches the active tab.
+    const active = document.querySelector('.workout-tab.active');
+    showGroup(active ? active.dataset.group : 'chest');
   }
 
   // ── STARTUP ──────────────────────────────────────────────────────────────

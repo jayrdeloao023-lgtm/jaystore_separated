@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jayr Deloao — Workouts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=2" />
+</head>
+<body>
+  <div class="cross" aria-hidden="true">
+    <div class="band one"></div>
+    <div class="band two"></div>
+  </div>
+  <div id="page-content">
+  <nav>
+    <div class="logo">
+      jay<span>store</span>
+    </div>
+
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="shop.html">Shop Gear</a></li>
+      <li><a href="music.html">Music</a></li>
+      <li><a href="workout.html">Workouts</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+  </nav>
+  <section class="workout" id="workout">
+    <p class="workout-tagline">Tutorial per muscle group</p>
+    <div class="workout-heading">
+      <h2>Workouts</h2>
+      <span class="workout-label">Tutorials / Video</span>
+    </div>
+
+    <div class="workout-tabs" role="tablist" aria-label="Muscle groups">
+      <button class="workout-tab active" type="button" data-group="chest" role="tab" aria-selected="true">Chest</button>
+      <button class="workout-tab" type="button" data-group="back" role="tab" aria-selected="false">Back</button>
+      <button class="workout-tab" type="button" data-group="shoulders" role="tab" aria-selected="false">Shoulders</button>
+      <button class="workout-tab" type="button" data-group="biceps" role="tab" aria-selected="false">Biceps</button>
+    </div>
+
+    <div class="workout-grid" id="workoutGrid">
+      <article class="workout-card" data-group="chest" data-title="Chest — Tutorial 1" data-src="assets/workout/chest/33efc5cb-852b-44b2-86b1-ddd5f886e67e.mp4" role="button" tabindex="0" aria-controls="workoutModal">
+        <div class="workout-thumb" aria-hidden="true">▶</div>
+        <h3>Chest — Tutorial 1</h3>
+        <p>Chest muscle group</p>
+      </article>
+      <article class="workout-card" data-group="chest" data-title="Chest — Tutorial 2" data-src="assets/workout/chest/55e9ba4c-d6d8-41b5-b67c-24dc1a5ee18d.mp4" role="button" tabindex="0" aria-controls="workoutModal">
+        <div class="workout-thumb" aria-hidden="true">▶</div>
+        <h3>Chest — Tutorial 2</h3>
+        <p>Chest muscle group</p>
+      </article>
+      <article class="workout-card" data-group="chest" data-title="Chest — Tutorial 3" data-src="assets/workout/chest/f355c618-9fbe-4cc2-b3f3-83060b8b1ab9.mp4" role="button" tabindex="0" aria-controls="workoutModal">
+        <div class="workout-thumb" aria-hidden="true">▶</div>
+        <h3>Chest — Tutorial 3</h3>
+        <p>Chest muscle group</p>
+      </article>
+
+      <article class="workout-card" data-group="back" data-title="Back — Tutorial 1" data-src="assets/workout/back/03f351e7-cb3c-4b22-8409-5a6a973cd2ff.mp4" role="button" tabindex="0" aria-controls="workoutModal">
+        <div class="workout-thumb" aria-hidden="true">▶</div>
+        <h3>Back — Tutorial 1</h3>
+        <p>Back muscle group</p>
+      </article>
+      <article class="workout-card" data-group="back" data-title="Back — Tutorial 2" data-src="assets/workout/back/5f4b9fa2-dc29-4119-95ea-cc0741e36508.mp4" role="button" tabindex="0" aria-controls="workoutModal">
+        <div class="workout-thumb" aria-hidden="true">▶</div>
+        <h3>Back — Tutorial 2</h3>
+        <p>Back muscle group</p>
+      </article>
+      <article class="workout-card" data-group="back" data-title="Back — Tutorial 3" data-src="assets/workout/back/d3bb32ee-84bc-49ee-a279-3d056cc67a5b.mp4" role="button" tabindex="0" aria-controls="workoutModal">
+        <div class="workout-thumb" aria-hidden="true">▶</div>
+        <h3>Back — Tutorial 3</h3>
+        <p>Back muscle group</p>
+      </article>
+      <article class="workout-card" data-group="back" data-title="Back — Tutorial 4" data-src="assets/workout/back/fd1ca8f2-d45b-463f-99dc-0dd4f2348619.mp4" role="button" tabindex="0" aria-controls="workoutModal">
+        <div class="workout-thumb" aria-hidden="true">▶</div>
+        <h3>Back — Tutorial 4</h3>
+        <p>Back muscle group</p>
+      </article>
+
+      <article class="workout-card" data-group="shoulders" data-title="Shoulders — Tutorial 1" data-src="assets/workout/shoulder/2226e0dd-6f4e-42c5-88d4-e7ba46c1057d.mp4" role="button" tabindex="0" aria-controls="workoutModal">
+        <div class="workout-thumb" aria-hidden="true">▶</div>
+        <h3>Shoulders — Tutorial 1</h3>
+        <p>Shoulder muscle group</p>
+      </article>
+      <article class="workout-card" data-group="shoulders" data-title="Shoulders — Tutorial 2" data-src="assets/workout/shoulder/2e9ca738-6fb2-49df-bdbd-465d49358586.mp4" role="button" tabindex="0" aria-controls="workoutModal">
+        <div class="workout-thumb" aria-hidden="true">▶</div>
+        <h3>Shoulders — Tutorial 2</h3>
+        <p>Shoulder muscle group</p>
+      </article>
+      <article class="workout-card" data-group="shoulders" data-title="Shoulders — Tutorial 3" data-src="assets/workout/shoulder/fb8a3a3d-fde5-440a-9476-08e869020f72.mp4" role="button" tabindex="0" aria-controls="workoutModal">
+        <div class="workout-thumb" aria-hidden="true">▶</div>
+        <h3>Shoulders — Tutorial 3</h3>
+        <p>Shoulder muscle group</p>
+      </article>
+
+      <article class="workout-card" data-group="biceps" data-title="Biceps — Tutorial 1" data-src="assets/workout/biceps/3a78d298-e03d-453c-8c36-7b6fceda7bb9.mp4" role="button" tabindex="0" aria-controls="workoutModal">
+        <div class="workout-thumb" aria-hidden="true">▶</div>
+        <h3>Biceps — Tutorial 1</h3>
+        <p>Biceps muscle group</p>
+      </article>
+      <article class="workout-card" data-group="biceps" data-title="Biceps — Tutorial 2" data-src="assets/workout/biceps/e70b8c10-9dc4-4253-84ac-7f1964bcf3f4.mp4" role="button" tabindex="0" aria-controls="workoutModal">
+        <div class="workout-thumb" aria-hidden="true">▶</div>
+        <h3>Biceps — Tutorial 2</h3>
+        <p>Biceps muscle group</p>
+      </article>
+    </div>
+  </section><dialog id="workoutModal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-label">Workout / Tutorial</div>
+        <h2 id="workoutModalTitle">Chest — Tutorial 1</h2>
+      </div>
+      <button class="modal-close" type="button" aria-label="Close workout video">x</button>
+    </div>
+    <div class="modal-body workout-modal-body">
+      <video id="workoutVideo" controls playsinline></video>
+    </div>
+  </dialog>
+  </div>
+  <div id="floating-player" class="floating-player" role="region" aria-label="Now playing">
+    <div class="fp-art" aria-hidden="true">♪</div>
+    <div class="fp-info">
+      <strong class="fp-title">No track selected</strong>
+      <span class="fp-artist">—</span>
+    </div>
+    <div class="fp-controls">
+      <button class="fp-btn fp-prev" type="button" aria-label="Previous track">‹</button>
+      <button class="fp-btn fp-play" type="button" aria-label="Play or pause">▶</button>
+      <button class="fp-btn fp-next" type="button" aria-label="Next track">›</button>
+    </div>
+    <div class="fp-progress-wrap" aria-hidden="true">
+      <div class="fp-progress"><div class="fp-progress-bar"></div></div>
+      <div class="fp-time"><span class="fp-current">0:00</span><span class="fp-duration">0:00</span></div>
+    </div>
+    <div class="fp-volume-wrap" title="Volume">
+      <span class="fp-vol-icon">🔊</span>
+      <input class="fp-volume" type="range" min="0" max="1" step="0.05" value="1" aria-label="Volume" />
+    </div>
+    <button class="fp-close" type="button" aria-label="Close player">×</button>
+  </div>
+  <audio id="persistent-audio" preload="metadata" crossorigin="anonymous"></audio>
+  <script src="script.js?v=5"></script>
+</body>
+</html>
