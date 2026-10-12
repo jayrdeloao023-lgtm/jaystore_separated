@@ -46,7 +46,7 @@ create table if not exists public.shop_orders (
     status in ('pending', 'confirmed', 'shipped', 'completed', 'cancelled')
   ),
   total_amount numeric(10, 2) not null check (total_amount > 0),
-  currency text not null default 'USD',
+  currency text not null default 'PHP',
   created_at timestamptz not null default now()
 );
 

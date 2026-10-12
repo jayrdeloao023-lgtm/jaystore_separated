@@ -8,7 +8,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=6" />
+  <link rel="stylesheet" href="style.css?v=8" />
+  <link rel="icon" type="image/webp" href="assets/image/profile.webp" />
 </head>
 <body>
   <div class="cross" aria-hidden="true">
@@ -52,46 +53,46 @@
     <p id="shopStatus" class="shop-status" role="status" aria-live="polite"></p>
     <div class="product-grid" id="productGrid">
       <article class="product-card" data-product="dumbbell">
-        <div class="product-image">DB 20</div>
+        <div class="product-image"><img src="assets/image/product/dbell.jpeg" alt="Power Dumbbell Set" loading="lazy" /></div>
         <h3>Power Dumbbell Set</h3>
         <p>Heavy-duty training pair</p>
         <p class="product-stock">In stock: 20</p>
-        <div class="product-footer"><span class="product-price">$49</span><button class="add-cart" data-product-id="dumbbell" data-product-name="Power Dumbbell Set" data-price="49" data-stock="20" type="button">Add to cart</button></div>
+        <div class="product-footer"><span class="product-price">₱49</span><button class="add-cart" data-product-id="dumbbell" data-product-name="Power Dumbbell Set" data-price="49" data-stock="20" type="button">Add to cart</button></div>
       </article>
       <article class="product-card" data-product="band resistance">
-        <div class="product-image">BAND</div>
+        <div class="product-image"><img src="assets/image/product/band.jpeg" alt="Resistance Band Kit" loading="lazy" /></div>
         <h3>Resistance Band Kit</h3>
         <p>Portable full-body training</p>
         <p class="product-stock">In stock: 30</p>
-        <div class="product-footer"><span class="product-price">$24</span><button class="add-cart" data-product-id="band" data-product-name="Resistance Band Kit" data-price="24" data-stock="30" type="button">Add to cart</button></div>
+        <div class="product-footer"><span class="product-price">₱24</span><button class="add-cart" data-product-id="band" data-product-name="Resistance Band Kit" data-price="24" data-stock="30" type="button">Add to cart</button></div>
       </article>
       <article class="product-card" data-product="shaker bottle">
-        <div class="product-image">SHAKE</div>
+        <div class="product-image"><img src="assets/image/product/shaker.jpeg" alt="Built Shaker Bottle" loading="lazy" /></div>
         <h3>Built Shaker Bottle</h3>
         <p>Leak-proof gym essential</p>
         <p class="product-stock">In stock: 25</p>
-        <div class="product-footer"><span class="product-price">$15</span><button class="add-cart" data-product-id="shaker" data-product-name="Built Shaker Bottle" data-price="15" data-stock="25" type="button">Add to cart</button></div>
+        <div class="product-footer"><span class="product-price">₱15</span><button class="add-cart" data-product-id="shaker" data-product-name="Built Shaker Bottle" data-price="15" data-stock="25" type="button">Add to cart</button></div>
       </article>
       <article class="product-card" data-product="protein fuel whey supplement">
-        <div class="product-image">FUEL</div>
+        <div class="product-image"><img src="assets/image/product/whey.jpeg" alt="Performance Whey" loading="lazy" /></div>
         <h3>Performance Whey</h3>
         <p>Post-workout protein fuel</p>
         <p class="product-stock">In stock: 15</p>
-        <div class="product-footer"><span class="product-price">$39</span><button class="add-cart" data-product-id="whey" data-product-name="Performance Whey" data-price="39" data-stock="15" type="button">Add to cart</button></div>
+        <div class="product-footer"><span class="product-price">₱39</span><button class="add-cart" data-product-id="whey" data-product-name="Performance Whey" data-price="39" data-stock="15" type="button">Add to cart</button></div>
       </article>
       <article class="product-card" data-product="lifting gloves training gloves">
-        <div class="product-image">GRIP</div>
+        <div class="product-image"><img src="assets/image/product/gloves.jpeg" alt="Power Grip Gloves" loading="lazy" /></div>
         <h3>Power Grip Gloves</h3>
         <p>Secure support for heavy lifts</p>
         <p class="product-stock">In stock: 18</p>
-        <div class="product-footer"><span class="product-price">$19</span><button class="add-cart" data-product-id="gloves" data-product-name="Power Grip Gloves" data-price="19" data-stock="18" type="button">Add to cart</button></div>
+        <div class="product-footer"><span class="product-price">₱19</span><button class="add-cart" data-product-id="gloves" data-product-name="Power Grip Gloves" data-price="19" data-stock="18" type="button">Add to cart</button></div>
       </article>
       <article class="product-card" data-product="training belt lifting belt">
-        <div class="product-image">CORE</div>
+        <div class="product-image"><img src="assets/image/product/belt.jpeg" alt="Core Lifting Belt" loading="lazy" /></div>
         <h3>Core Lifting Belt</h3>
         <p>Strong support for every set</p>
         <p class="product-stock">In stock: 12</p>
-        <div class="product-footer"><span class="product-price">$29</span><button class="add-cart" data-product-id="belt" data-product-name="Core Lifting Belt" data-price="29" data-stock="12" type="button">Add to cart</button></div>
+        <div class="product-footer"><span class="product-price">₱29</span><button class="add-cart" data-product-id="belt" data-product-name="Core Lifting Belt" data-price="29" data-stock="12" type="button">Add to cart</button></div>
       </article>
     </div>
   </section>
@@ -108,7 +109,7 @@
       <p id="bagEmpty" class="bag-empty">Your bag is empty. Add some gear to get started.</p>
       <div class="checkout-total">
         <span>Total amount</span>
-        <strong id="bagTotal">$0.00</strong>
+        <strong id="bagTotal">₱0.00</strong>
       </div>
       <div class="checkout-actions bag-actions">
         <button class="checkout-cancel" id="continueShopping" type="button">Continue shopping</button>
@@ -135,7 +136,7 @@
             </label>
             <label>
               <span>Email address *</span>
-              <input name="customerEmail" type="email" autocomplete="email" maxlength="254" required />
+              <input name="customerEmail" type="email" autocomplete="email" maxlength="254" pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}" title="Enter a full email address, like name@example.com" required />
             </label>
             <label>
               <span>Phone number *</span>
@@ -157,7 +158,7 @@
             <div id="checkoutItems" class="checkout-items"></div>
             <div class="checkout-total">
               <span>Total amount</span>
-              <strong id="checkoutTotal">$0.00</strong>
+              <strong id="checkoutTotal">₱0.00</strong>
             </div>
           </div>
           <fieldset class="payment-fields">
@@ -212,6 +213,6 @@
     <button class="fp-close" type="button" aria-label="Close player">×</button>
   </div>
   <audio id="persistent-audio" preload="metadata" crossorigin="anonymous"></audio>
-  <script src="script.js?v=12"></script>
+  <script src="script.js?v=14"></script>
 </body>
 </html>

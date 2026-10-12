@@ -975,9 +975,9 @@
     }
 
     function formatPrice(amount) {
-      return new Intl.NumberFormat('en-US', {
+      return new Intl.NumberFormat('en-PH', {
         style: 'currency',
-        currency: 'USD'
+        currency: 'PHP'
       }).format(amount);
     }
 
@@ -1096,6 +1096,17 @@
       });
     }
 
+    // Local product photos. Each product id maps to an image in assets/image/product.
+    // The text badge is kept as a fallback if a photo can't be loaded.
+    const PRODUCT_IMAGES = {
+      dumbbell: 'assets/image/product/dbell.jpeg',
+      band: 'assets/image/product/band.jpeg',
+      shaker: 'assets/image/product/shaker.jpeg',
+      whey: 'assets/image/product/whey.jpeg',
+      gloves: 'assets/image/product/gloves.jpeg',
+      belt: 'assets/image/product/belt.jpeg'
+    };
+
     function renderProducts(products) {
       grid.replaceChildren();
       products.forEach(product => {
@@ -1112,7 +1123,21 @@
 
         const image = document.createElement('div');
         image.className = 'product-image';
-        image.textContent = product.badge || product.name;
+        const imageSrc = PRODUCT_IMAGES[product.id];
+        if (imageSrc) {
+          const img = document.createElement('img');
+          img.src = imageSrc;
+          img.alt = product.name;
+          img.loading = 'lazy';
+          // If the photo can't load, fall back to the text badge.
+          img.addEventListener('error', () => {
+            img.remove();
+            image.textContent = product.badge || product.name;
+          });
+          image.appendChild(img);
+        } else {
+          image.textContent = product.badge || product.name;
+        }
         const title = document.createElement('h3');
         title.textContent = product.name;
         const description = document.createElement('p');
@@ -1124,10 +1149,7 @@
         footer.className = 'product-footer';
         const price = document.createElement('span');
         price.className = 'product-price';
-        price.textContent = new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: 'USD'
-        }).format(Number(product.price));
+        price.textContent = formatPrice(Number(product.price));
         const button = document.createElement('button');
         button.className = 'add-cart';
         button.type = 'button';
@@ -1291,9 +1313,10 @@
             }
           });
         } catch (error) {
-          console.error('Could not place Shop Gear order:', error);
+          const reason = error && (error.message || error.hint || error.details);
+          console.error('Could not place Shop Gear order:', reason || error);
           showCheckoutStatus(
-            'Could not place your order: ' + (error.message || 'Supabase returned an unknown error.'),
+            'Could not place your order: ' + (reason || 'Supabase returned an unknown error.'),
             'error'
           );
         } finally {
