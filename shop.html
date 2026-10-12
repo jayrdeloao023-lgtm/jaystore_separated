@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=2" />
+  <link rel="stylesheet" href="style.css?v=6" />
 </head>
 <body>
   <div class="cross" aria-hidden="true">
@@ -34,51 +34,161 @@
     <p class="shop-tagline">Start build your muscle</p>
     <div class="shop-heading">
       <h2>Shop Gear</h2>
-      <span class="cart-count" id="cartCount">Cart: 0</span>
+      <div class="shop-cart-controls">
+        <button class="bag-open" id="openBag" type="button" aria-label="Open shopping bag, 0 items">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 8h14l1 13H4L5 8Z"></path>
+            <path d="M9 9V6a3 3 0 0 1 6 0v3"></path>
+          </svg>
+          <span>Bag</span>
+          <span class="bag-count" id="cartCount">0</span>
+        </button>
+      </div>
     </div>
     <form class="search-form" role="search">
       <input type="search" aria-label="Search gym store" placeholder="Search gym essentials" />
       <button type="submit" aria-label="Submit search">Go</button>
     </form>
+    <p id="shopStatus" class="shop-status" role="status" aria-live="polite"></p>
     <div class="product-grid" id="productGrid">
       <article class="product-card" data-product="dumbbell">
         <div class="product-image">DB 20</div>
         <h3>Power Dumbbell Set</h3>
         <p>Heavy-duty training pair</p>
-        <div class="product-footer"><span class="product-price">$49</span><button class="add-cart" type="button">Add to cart</button></div>
+        <p class="product-stock">In stock: 20</p>
+        <div class="product-footer"><span class="product-price">$49</span><button class="add-cart" data-product-id="dumbbell" data-product-name="Power Dumbbell Set" data-price="49" data-stock="20" type="button">Add to cart</button></div>
       </article>
       <article class="product-card" data-product="band resistance">
         <div class="product-image">BAND</div>
         <h3>Resistance Band Kit</h3>
         <p>Portable full-body training</p>
-        <div class="product-footer"><span class="product-price">$24</span><button class="add-cart" type="button">Add to cart</button></div>
+        <p class="product-stock">In stock: 30</p>
+        <div class="product-footer"><span class="product-price">$24</span><button class="add-cart" data-product-id="band" data-product-name="Resistance Band Kit" data-price="24" data-stock="30" type="button">Add to cart</button></div>
       </article>
       <article class="product-card" data-product="shaker bottle">
         <div class="product-image">SHAKE</div>
         <h3>Built Shaker Bottle</h3>
         <p>Leak-proof gym essential</p>
-        <div class="product-footer"><span class="product-price">$15</span><button class="add-cart" type="button">Add to cart</button></div>
+        <p class="product-stock">In stock: 25</p>
+        <div class="product-footer"><span class="product-price">$15</span><button class="add-cart" data-product-id="shaker" data-product-name="Built Shaker Bottle" data-price="15" data-stock="25" type="button">Add to cart</button></div>
       </article>
       <article class="product-card" data-product="protein fuel whey supplement">
         <div class="product-image">FUEL</div>
         <h3>Performance Whey</h3>
         <p>Post-workout protein fuel</p>
-        <div class="product-footer"><span class="product-price">$39</span><button class="add-cart" type="button">Add to cart</button></div>
+        <p class="product-stock">In stock: 15</p>
+        <div class="product-footer"><span class="product-price">$39</span><button class="add-cart" data-product-id="whey" data-product-name="Performance Whey" data-price="39" data-stock="15" type="button">Add to cart</button></div>
       </article>
       <article class="product-card" data-product="lifting gloves training gloves">
         <div class="product-image">GRIP</div>
         <h3>Power Grip Gloves</h3>
         <p>Secure support for heavy lifts</p>
-        <div class="product-footer"><span class="product-price">$19</span><button class="add-cart" type="button">Add to cart</button></div>
+        <p class="product-stock">In stock: 18</p>
+        <div class="product-footer"><span class="product-price">$19</span><button class="add-cart" data-product-id="gloves" data-product-name="Power Grip Gloves" data-price="19" data-stock="18" type="button">Add to cart</button></div>
       </article>
       <article class="product-card" data-product="training belt lifting belt">
         <div class="product-image">CORE</div>
         <h3>Core Lifting Belt</h3>
         <p>Strong support for every set</p>
-        <div class="product-footer"><span class="product-price">$29</span><button class="add-cart" type="button">Add to cart</button></div>
+        <p class="product-stock">In stock: 12</p>
+        <div class="product-footer"><span class="product-price">$29</span><button class="add-cart" data-product-id="belt" data-product-name="Core Lifting Belt" data-price="29" data-stock="12" type="button">Add to cart</button></div>
       </article>
     </div>
   </section>
+  <dialog id="bagDialog" class="checkout-dialog bag-dialog" aria-labelledby="bagTitle">
+    <div class="checkout-header">
+      <div>
+        <p class="checkout-kicker">Jaystore / Shop Gear</p>
+        <h2 id="bagTitle">Your Bag</h2>
+      </div>
+      <button class="checkout-close" id="closeBag" type="button" aria-label="Close shopping bag">×</button>
+    </div>
+    <div class="checkout-content">
+      <div id="bagItems" class="checkout-items"></div>
+      <p id="bagEmpty" class="bag-empty">Your bag is empty. Add some gear to get started.</p>
+      <div class="checkout-total">
+        <span>Total amount</span>
+        <strong id="bagTotal">$0.00</strong>
+      </div>
+      <div class="checkout-actions bag-actions">
+        <button class="checkout-cancel" id="continueShopping" type="button">Continue shopping</button>
+        <button class="checkout-submit" id="bagCheckout" type="button" disabled>Checkout</button>
+      </div>
+    </div>
+  </dialog>
+  <dialog id="checkoutDialog" class="checkout-dialog" aria-labelledby="checkoutTitle">
+    <div class="checkout-header">
+      <div>
+        <p class="checkout-kicker">Jaystore / Shop Gear</p>
+        <h2 id="checkoutTitle">Delivery Information</h2>
+      </div>
+      <button class="checkout-close" id="closeCheckout" type="button" aria-label="Close checkout">×</button>
+    </div>
+    <div class="checkout-content">
+      <form id="checkoutForm">
+        <section class="checkout-step" id="deliveryStep" aria-labelledby="deliveryTitle">
+          <fieldset class="delivery-fields">
+            <legend id="deliveryTitle">Delivery Information</legend>
+            <label>
+              <span>Full name *</span>
+              <input name="customerName" type="text" autocomplete="name" minlength="2" maxlength="120" required />
+            </label>
+            <label>
+              <span>Email address *</span>
+              <input name="customerEmail" type="email" autocomplete="email" maxlength="254" required />
+            </label>
+            <label>
+              <span>Phone number *</span>
+              <input name="customerPhone" type="tel" autocomplete="tel" minlength="7" maxlength="30" required />
+            </label>
+            <label>
+              <span>Delivery address *</span>
+              <textarea name="deliveryAddress" autocomplete="street-address" minlength="8" maxlength="500" rows="3" required></textarea>
+            </label>
+          </fieldset>
+          <div class="checkout-actions">
+            <button class="checkout-cancel" id="cancelCheckout" type="button">Cancel</button>
+            <button class="checkout-submit" id="continueCheckout" type="button">Continue to checkout</button>
+          </div>
+        </section>
+        <section class="checkout-step" id="paymentStep" aria-labelledby="paymentTitle" hidden>
+          <div class="checkout-summary" aria-labelledby="checkoutSummaryTitle">
+            <h3 id="checkoutSummaryTitle">Order Summary</h3>
+            <div id="checkoutItems" class="checkout-items"></div>
+            <div class="checkout-total">
+              <span>Total amount</span>
+              <strong id="checkoutTotal">$0.00</strong>
+            </div>
+          </div>
+          <fieldset class="payment-fields">
+            <legend id="paymentTitle">Payment Method</legend>
+            <label class="payment-option">
+              <input type="radio" name="paymentMethod" value="gcash" required />
+              <span><strong>GCash</strong><small>Mobile payment — payment instructions will be arranged separately.</small></span>
+            </label>
+            <label class="payment-option">
+              <input type="radio" name="paymentMethod" value="bank_transfer" />
+              <span><strong>Bank transfer</strong><small>Direct bank deposit — details will be arranged separately.</small></span>
+            </label>
+            <label class="payment-option">
+              <input type="radio" name="paymentMethod" value="cash_on_delivery" />
+              <span><strong>Cash on delivery</strong><small>Pay when your order arrives.</small></span>
+            </label>
+            <label class="payment-option">
+              <input type="radio" name="paymentMethod" value="credit_debit" />
+              <span><strong>Credit/debit card</strong><small>Visa, Mastercard — payment handled separately.</small></span>
+            </label>
+            <p class="payment-note">This checkout records your order; it does not collect card details or process online payments.</p>
+          </fieldset>
+          <p id="checkoutStatus" class="checkout-status" role="status" aria-live="polite"></p>
+          <div class="checkout-actions">
+            <button class="checkout-cancel" id="backToDelivery" type="button">Back</button>
+            <button class="checkout-submit" id="submitOrder" type="submit">Place order</button>
+          </div>
+        </section>
+      </form>
+    </div>
+  </dialog>
   </div>
   <div id="floating-player" class="floating-player" role="region" aria-label="Now playing">
     <div class="fp-art" aria-hidden="true">♪</div>
@@ -102,6 +212,6 @@
     <button class="fp-close" type="button" aria-label="Close player">×</button>
   </div>
   <audio id="persistent-audio" preload="metadata" crossorigin="anonymous"></audio>
-  <script src="script.js?v=5"></script>
+  <script src="script.js?v=12"></script>
 </body>
 </html>

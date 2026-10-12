@@ -31,6 +31,50 @@
     playlist: LS_PREFIX + 'playlist'    // serialized playlist (src/title/artist)
   };
 
+  // Replace these with the Project URL and publishable (anon) key from Supabase.
+  // Never put a service_role key in browser code.
+  const SUPABASE_URL = 'https://wjbxtjdwdwjleutqpifw.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_iWlNdvF0DvUXFJGb5ebM2w_hkseUlYf'
+  let supabaseClient = null;
+  let supabaseClientPromise = null;
+
+  function getSupabaseClient() {
+    if (supabaseClient) return Promise.resolve(supabaseClient);
+    if (supabaseClientPromise) return supabaseClientPromise;
+
+    supabaseClientPromise = new Promise((resolve, reject) => {
+      if (SUPABASE_URL.includes('YOUR_PROJECT_ID') || SUPABASE_ANON_KEY.includes('YOUR_SUPABASE_ANON_KEY')) {
+        reject(new Error('Add your Supabase Project URL and anon key in script.js first.'));
+        return;
+      }
+
+      function createClient() {
+        if (!window.supabase || !window.supabase.createClient) {
+          reject(new Error('Supabase SDK did not load. Check your internet connection and try again.'));
+          return;
+        }
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        resolve(supabaseClient);
+      }
+
+      if (window.supabase && window.supabase.createClient) {
+        createClient();
+        return;
+      }
+
+      const sdk = document.createElement('script');
+      sdk.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+      sdk.onload = createClient;
+      sdk.onerror = () => reject(new Error('Could not load the Supabase SDK.'));
+      document.head.appendChild(sdk);
+    }).catch(error => {
+      supabaseClientPromise = null;
+      throw error;
+    });
+
+    return supabaseClientPromise;
+  }
+
   // One-time migration: older builds could persist double-encoded paths
   // (e.g. %2520) or raw-space paths. If the script version changed, drop the
   // stale player/playlist data so it is rebuilt cleanly.
@@ -794,77 +838,100 @@
    */
   function bindJourneyFeatures() {
     const progressModal = document.getElementById('progressModal');
-    const routineModal  = document.getElementById('routineModal');
+    const routineModal = document.getElementById('routineModal');
     if (!progressModal && !routineModal) return;
 
     document.querySelectorAll('.journey-card').forEach(card => {
-      card.addEventListener('click', () => {
-        const modalId = card.dataset.modal;
-        const modal = document.getElementById(modalId);
+      const openModal = () => {
+        const modal = document.getElementById(card.dataset.modal);
         if (modal && modal.showModal) modal.showModal();
-      });
-      card.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          const modalId = card.dataset.modal;
-          const modal = document.getElementById(modalId);
-          if (modal && modal.showModal) modal.showModal();
+      };
+      card.addEventListener('click', openModal);
+      card.addEventListener('keydown', event => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          openModal();
         }
       });
     });
 
-    document.querySelectorAll('dialog .modal-close').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const dialog = btn.closest('dialog');
+    document.querySelectorAll('dialog .modal-close').forEach(button => {
+      button.addEventListener('click', () => {
+        const dialog = button.closest('dialog');
         if (dialog && dialog.close) dialog.close();
       });
     });
 
+    document.querySelectorAll('.photo-upload input[type="file"][data-preview]').forEach(input => {
+      input.addEventListener('change', () => {
+        const file = input.files && input.files[0];
+        if (!file) return;
+        const preview = document.getElementById(input.dataset.preview);
+        const container = input.closest('.photo-upload');
+        if (!preview || !container) return;
+        preview.src = URL.createObjectURL(file);
+        container.classList.add('has-photo');
+      });
+    });
+
+    const routines = {
+      3: ['Chest & Triceps', 'Back & Biceps', 'Legs & Shoulders'],
+      4: ['Chest', 'Back', 'Legs', 'Shoulders & Arms'],
+      5: ['Chest', 'Back', 'Legs', 'Shoulders', 'Arms & Core'],
+      7: ['Chest', 'Back', 'Legs', 'Shoulders', 'Arms', 'Core & Cardio', 'Active Recovery']
+    };
     const tabs = document.querySelectorAll('.routine-tab');
     const list = document.getElementById('routineList');
-    if (tabs.length && list) {
-      const routines = {
-        3: ['Chest & Triceps', 'Back & Biceps', 'Legs & Shoulders'],
-        4: ['Chest', 'Back', 'Legs', 'Shoulders & Arms'],
-        5: ['Chest', 'Back', 'Legs', 'Shoulders', 'Arms & Core'],
-        7: ['Chest', 'Back', 'Legs', 'Shoulders', 'Arms', 'Core & Cardio', 'Active Recovery']
-      };
 
-      function render(days) {
-        list.innerHTML = '';
-        (routines[days] || []).forEach((name, i) => {
-          const day = document.createElement('div');
-          day.className = 'routine-day';
-          day.innerHTML = `<strong>Day ${i + 1}</strong><span>${name}</span><div class="routine-video"><strong>Upload Video</strong><small>Choose a file</small><input type="file" accept="video/*" /></div>`;
-          list.appendChild(day);
-        });
-        bindRoutineUploads();
-      }
-
-      tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-          tabs.forEach(t => t.classList.remove('active'));
-          tab.classList.add('active');
-          render(Number(tab.dataset.days));
-        });
+    function renderRoutine(days) {
+      if (!list) return;
+      list.replaceChildren();
+      (routines[days] || []).forEach((name, index) => {
+        const day = document.createElement('div');
+        day.className = 'routine-day';
+        const label = document.createElement('strong');
+        label.textContent = 'Day ' + (index + 1);
+        const routineName = document.createElement('span');
+        routineName.textContent = name;
+        const videoUpload = document.createElement('div');
+        videoUpload.className = 'routine-video';
+        const uploadLabel = document.createElement('strong');
+        uploadLabel.textContent = 'Upload Video';
+        const uploadHint = document.createElement('small');
+        uploadHint.textContent = 'Choose a file';
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'video/*';
+        videoUpload.append(uploadLabel, uploadHint, input);
+        day.append(label, routineName, videoUpload);
+        list.appendChild(day);
       });
-
-      const active = document.querySelector('.routine-tab.active');
-      render(Number(active?.dataset.days || 3));
+      bindRoutineUploads();
     }
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(item => item.classList.remove('active'));
+        tab.classList.add('active');
+        renderRoutine(Number(tab.dataset.days));
+      });
+    });
+    const activeTab = document.querySelector('.routine-tab.active');
+    if (list) renderRoutine(Number(activeTab ? activeTab.dataset.days : 3));
   }
 
-  /** Journey page: turn a selected video file into a preview in the routine list. */
   function bindRoutineUploads() {
     document.querySelectorAll('.routine-video input[type="file"]').forEach(input => {
-      input.addEventListener('change', (e) => {
-        const file = e.target.files[0];
+      input.addEventListener('change', () => {
+        const file = input.files && input.files[0];
         if (!file) return;
         const container = input.closest('.routine-video');
+        if (!container) return;
         let video = container.querySelector('video');
         if (!video) {
           video = document.createElement('video');
           video.controls = true;
+          video.playsInline = true;
           container.appendChild(video);
         }
         video.src = URL.createObjectURL(file);
@@ -873,31 +940,365 @@
     });
   }
 
-  /**
-   * Shop page: add-to-cart counter and live search filter.
-   */
   function bindShopFeatures() {
     const grid = document.getElementById('productGrid');
     const countEl = document.getElementById('cartCount');
+    const status = document.getElementById('shopStatus');
     if (!grid || !countEl) return;
 
-    let cart = 0;
-    grid.querySelectorAll('.add-cart').forEach(btn => {
-      btn.addEventListener('click', () => {
-        cart += 1;
-        countEl.textContent = 'Cart: ' + cart;
+    const cart = new Map();
+    const form = document.querySelector('.search-form');
+    const searchInput = form ? form.querySelector('input') : null;
+    const checkoutDialog = document.getElementById('checkoutDialog');
+    const checkoutForm = document.getElementById('checkoutForm');
+    const checkoutItems = document.getElementById('checkoutItems');
+    const checkoutTotal = document.getElementById('checkoutTotal');
+    const checkoutStatus = document.getElementById('checkoutStatus');
+    const bagDialog = document.getElementById('bagDialog');
+    const bagOpenButton = document.getElementById('openBag');
+    const bagItems = document.getElementById('bagItems');
+    const bagTotal = document.getElementById('bagTotal');
+    const bagEmpty = document.getElementById('bagEmpty');
+    const bagCheckoutButton = document.getElementById('bagCheckout');
+    const submitButton = document.getElementById('submitOrder');
+    const deliveryStep = document.getElementById('deliveryStep');
+    const paymentStep = document.getElementById('paymentStep');
+    const checkoutTitle = document.getElementById('checkoutTitle');
+    const continueButton = document.getElementById('continueCheckout');
+
+    function showCheckoutStep(step) {
+      const showingDelivery = step === 'delivery';
+      deliveryStep.hidden = !showingDelivery;
+      paymentStep.hidden = showingDelivery;
+      checkoutTitle.textContent = showingDelivery ? 'Delivery Information' : 'Checkout';
+      document.querySelector('.checkout-content').scrollTop = 0;
+    }
+
+    function formatPrice(amount) {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD'
+      }).format(amount);
+    }
+
+    function updateCartCount() {
+      let total = 0;
+      cart.forEach(item => {
+        total += item.quantity;
+      });
+      countEl.textContent = String(total);
+      if (bagOpenButton) {
+        bagOpenButton.setAttribute('aria-label', 'Open shopping bag, ' + total + (total === 1 ? ' item' : ' items'));
+      }
+      if (bagCheckoutButton) bagCheckoutButton.disabled = total === 0;
+      if (bagEmpty) bagEmpty.hidden = total > 0;
+    }
+
+    function renderCartItems(container) {
+      if (!container) return;
+      container.replaceChildren();
+      let total = 0;
+      cart.forEach(item => {
+        const line = document.createElement('div');
+        line.className = 'checkout-line';
+        const details = document.createElement('span');
+        details.textContent = item.name;
+        const quantityDetails = document.createElement('small');
+        quantityDetails.textContent = 'Quantity: ' + item.quantity + ' × ' + formatPrice(item.price);
+        details.appendChild(quantityDetails);
+        const lineTotal = document.createElement('strong');
+        lineTotal.textContent = formatPrice(item.price * item.quantity);
+        const controls = document.createElement('div');
+        controls.className = 'checkout-quantity';
+        const decrease = document.createElement('button');
+        decrease.type = 'button';
+        decrease.dataset.cartAction = 'decrease';
+        decrease.dataset.productId = item.id;
+        decrease.setAttribute('aria-label', 'Decrease ' + item.name + ' quantity');
+        decrease.textContent = '−';
+        const quantityCount = document.createElement('span');
+        quantityCount.textContent = String(item.quantity);
+        const increase = document.createElement('button');
+        increase.type = 'button';
+        increase.dataset.cartAction = 'increase';
+        increase.dataset.productId = item.id;
+        increase.setAttribute('aria-label', 'Increase ' + item.name + ' quantity');
+        increase.textContent = '+';
+        increase.disabled = item.quantity >= item.stock;
+        const remove = document.createElement('button');
+        remove.type = 'button';
+        remove.className = 'checkout-remove';
+        remove.dataset.cartAction = 'remove';
+        remove.dataset.productId = item.id;
+        remove.textContent = 'Remove';
+        controls.append(decrease, quantityCount, increase, remove);
+        line.append(details, lineTotal, controls);
+        container.appendChild(line);
+        total += item.price * item.quantity;
+      });
+      return total;
+    }
+
+    function renderCheckoutSummary() {
+      const total = renderCartItems(checkoutItems);
+      if (checkoutTotal && Number.isFinite(total)) checkoutTotal.textContent = formatPrice(total);
+    }
+
+    function renderBag() {
+      const total = renderCartItems(bagItems);
+      if (bagTotal && Number.isFinite(total)) bagTotal.textContent = formatPrice(total);
+      if (bagEmpty) bagEmpty.hidden = cart.size > 0;
+    }
+
+    function showCheckoutStatus(message, type) {
+      if (!checkoutStatus) return;
+      checkoutStatus.textContent = message || '';
+      checkoutStatus.classList.toggle('is-error', type === 'error');
+      checkoutStatus.classList.toggle('is-success', type === 'success');
+    }
+
+    function applySearch() {
+      const term = searchInput ? searchInput.value.toLowerCase().trim() : '';
+      grid.querySelectorAll('.product-card').forEach(card => {
+        const searchableText = (card.dataset.product || '') + ' ' + card.textContent;
+        card.hidden = !searchableText.toLowerCase().includes(term);
+      });
+    }
+
+    function bindProductButtons() {
+      grid.querySelectorAll('.add-cart').forEach(button => {
+        if (button.dataset.cartBound === 'true') return;
+        button.dataset.cartBound = 'true';
+        button.addEventListener('click', () => {
+          const productId = button.dataset.productId;
+          const stock = Number(button.dataset.stock);
+          const card = button.closest('.product-card');
+          if (!productId || !card) return;
+          const quantityInCart = cart.get(productId)?.quantity || 0;
+          if (quantityInCart >= stock) {
+            showCheckoutStatus('Your cart already has the maximum available stock for this product.', 'error');
+            return;
+          }
+          const item = cart.get(productId) || {
+            id: productId,
+            name: button.dataset.productName || card.querySelector('h3')?.textContent.trim() || productId,
+            price: Number(button.dataset.price),
+            stock,
+            quantity: 0
+          };
+          item.quantity += 1;
+          cart.set(productId, item);
+          updateCartCount();
+          renderBag();
+          if (checkoutDialog && checkoutDialog.open) renderCheckoutSummary();
+          showCheckoutStatus('', '');
+        });
+      });
+    }
+
+    function renderProducts(products) {
+      grid.replaceChildren();
+      products.forEach(product => {
+        const cartItem = cart.get(product.id);
+        if (!cartItem) return;
+        cartItem.name = product.name;
+        cartItem.price = Number(product.price);
+        cartItem.stock = Number(product.stock);
+      });
+      products.forEach(product => {
+        const card = document.createElement('article');
+        card.className = 'product-card';
+        card.dataset.product = [product.name].concat(product.search_terms || []).join(' ').toLowerCase();
+
+        const image = document.createElement('div');
+        image.className = 'product-image';
+        image.textContent = product.badge || product.name;
+        const title = document.createElement('h3');
+        title.textContent = product.name;
+        const description = document.createElement('p');
+        description.textContent = product.description || '';
+        const stockLabel = document.createElement('p');
+        stockLabel.className = 'product-stock';
+        stockLabel.textContent = product.stock > 0 ? 'In stock: ' + product.stock : 'Out of stock';
+        const footer = document.createElement('div');
+        footer.className = 'product-footer';
+        const price = document.createElement('span');
+        price.className = 'product-price';
+        price.textContent = new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD'
+        }).format(Number(product.price));
+        const button = document.createElement('button');
+        button.className = 'add-cart';
+        button.type = 'button';
+        button.textContent = product.stock > 0 ? 'Add to cart' : 'Out of stock';
+        button.disabled = product.stock <= 0;
+        button.dataset.productId = product.id;
+        button.dataset.stock = String(product.stock);
+        button.dataset.price = String(product.price);
+        button.dataset.productName = product.name;
+        footer.append(price, button);
+        card.append(image, title, description, stockLabel, footer);
+        grid.appendChild(card);
+      });
+      bindProductButtons();
+      applySearch();
+      updateCartCount();
+    }
+
+    bindProductButtons();
+    if (form) {
+      form.addEventListener('submit', event => {
+        event.preventDefault();
+        applySearch();
+      });
+      if (searchInput) searchInput.addEventListener('input', applySearch);
+    }
+
+    async function loadProducts() {
+      const client = await getSupabaseClient();
+      const { data, error } = await client
+        .from('shop_products')
+        .select('id, name, description, price, stock, badge, search_terms')
+        .eq('active', true)
+        .order('sort_order', { ascending: true });
+      if (error) throw error;
+      renderProducts(data);
+      if (status) status.textContent = data.length
+        ? 'Product catalog and stock levels loaded from Supabase.'
+        : 'No active products are listed in Supabase yet.';
+    }
+
+    loadProducts().catch(error => {
+        console.error('Could not load Shop Gear products from Supabase:', error);
+        if (status) {
+          status.textContent = 'Could not load the Supabase product catalog: ' +
+            (error.message || 'Supabase returned an unknown error.') +
+            ' The sample products are shown instead.';
+          status.classList.add('is-error');
+        }
+      });
+
+    if (bagOpenButton && bagDialog) {
+      bagOpenButton.addEventListener('click', () => {
+        renderBag();
+        if (bagDialog.showModal) bagDialog.showModal();
+      });
+    }
+
+    if (bagCheckoutButton && checkoutDialog) {
+      bagCheckoutButton.addEventListener('click', () => {
+        if (!cart.size) return;
+        showCheckoutStep('delivery');
+        renderCheckoutSummary();
+        showCheckoutStatus('', '');
+        if (bagDialog && bagDialog.open) bagDialog.close();
+        if (checkoutDialog.showModal) checkoutDialog.showModal();
+      });
+    }
+
+    [
+      ['closeBag', () => bagDialog],
+      ['continueShopping', () => bagDialog],
+      ['closeCheckout', () => checkoutDialog],
+      ['cancelCheckout', () => checkoutDialog]
+    ].forEach(([id, getDialog]) => {
+      const closeButton = document.getElementById(id);
+      const dialog = getDialog();
+      if (closeButton && dialog) closeButton.addEventListener('click', () => dialog.close());
+    });
+
+    if (continueButton) {
+      continueButton.addEventListener('click', () => {
+        const deliveryFields = Array.from(deliveryStep.querySelectorAll('input, textarea'));
+        const invalidField = deliveryFields.find(field => !field.checkValidity());
+        if (invalidField) {
+          invalidField.reportValidity();
+          return;
+        }
+        renderCheckoutSummary();
+        showCheckoutStatus('', '');
+        showCheckoutStep('payment');
+      });
+    }
+
+    const backButton = document.getElementById('backToDelivery');
+    if (backButton) backButton.addEventListener('click', () => showCheckoutStep('delivery'));
+
+    [bagItems, checkoutItems].forEach(container => {
+      if (container) container.addEventListener('click', event => {
+        const button = event.target.closest('button[data-cart-action]');
+        if (!button) return;
+        const item = cart.get(button.dataset.productId);
+        if (!item) return;
+        if (button.dataset.cartAction === 'remove' ||
+            (button.dataset.cartAction === 'decrease' && item.quantity === 1)) {
+          cart.delete(item.id);
+        } else if (button.dataset.cartAction === 'decrease') {
+          item.quantity -= 1;
+        } else if (button.dataset.cartAction === 'increase' && item.quantity < item.stock) {
+          item.quantity += 1;
+        }
+        updateCartCount();
+        renderBag();
+        renderCheckoutSummary();
       });
     });
 
-    const form = document.querySelector('.search-form');
-    if (form) {
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const term = form.querySelector('input')?.value.toLowerCase().trim() || '';
-        grid.querySelectorAll('.product-card').forEach(card => {
-          const text = card.textContent.toLowerCase();
-          card.style.display = text.includes(term) ? '' : 'none';
-        });
+    if (checkoutForm) {
+      checkoutForm.addEventListener('submit', async event => {
+        event.preventDefault();
+        if (!cart.size) {
+          showCheckoutStatus('Add at least one item before placing an order.', 'error');
+          return;
+        }
+
+        submitButton.disabled = true;
+        showCheckoutStatus('Submitting your order…', '');
+        try {
+          const client = await getSupabaseClient();
+          const values = new FormData(checkoutForm);
+          const { data, error } = await client.rpc('place_shop_order', {
+            p_customer_name: values.get('customerName'),
+            p_customer_email: values.get('customerEmail'),
+            p_customer_phone: values.get('customerPhone'),
+            p_delivery_address: values.get('deliveryAddress'),
+            p_payment_method: values.get('paymentMethod'),
+            p_items: Array.from(cart.values(), item => ({
+              id: item.id,
+              quantity: item.quantity
+            }))
+          });
+          if (error) throw error;
+
+          const order = Array.isArray(data) ? data[0] : data;
+          if (!order || !order.order_number) {
+            throw new Error('Supabase saved the order but returned no order number.');
+          }
+          cart.clear();
+          updateCartCount();
+          checkoutForm.reset();
+          showCheckoutStatus(
+            'Order ' + order.order_number + ' placed. Total: ' + formatPrice(Number(order.total_amount)) +
+            '. Payment will be arranged using your selected method.',
+            'success'
+          );
+          loadProducts().catch(refreshError => {
+            console.error('Order was placed, but the product list could not refresh:', refreshError);
+            if (status) {
+              status.textContent = 'Order placed, but stock could not refresh. Reload the page to see current inventory.';
+              status.classList.add('is-error');
+            }
+          });
+        } catch (error) {
+          console.error('Could not place Shop Gear order:', error);
+          showCheckoutStatus(
+            'Could not place your order: ' + (error.message || 'Supabase returned an unknown error.'),
+            'error'
+          );
+        } finally {
+          submitButton.disabled = false;
+        }
       });
     }
   }
