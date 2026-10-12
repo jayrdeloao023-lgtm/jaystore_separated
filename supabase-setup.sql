@@ -162,8 +162,8 @@ begin
     delivery_address, payment_method, total_amount
   )
   values (
-    trim(p_customer_name), lower(trim(p_customer_email)), trim(p_customer_phone),
-    trim(p_delivery_address), p_payment_method, v_total
+    v_order_number, trim(p_customer_name), lower(trim(p_customer_email)),
+    trim(p_customer_phone), trim(p_delivery_address), p_payment_method, v_total
   )
   returning id into v_order_id;
 

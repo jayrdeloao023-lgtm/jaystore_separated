@@ -34,7 +34,7 @@
   // Replace these with the Project URL and publishable (anon) key from Supabase.
   // Never put a service_role key in browser code.
   const SUPABASE_URL = 'https://wjbxtjdwdwjleutqpifw.supabase.co';
-  const SUPABASE_ANON_KEY = 'sb_publishable_iWlNdvF0DvUXFJGb5ebM2w_hkseUlYf'
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndqYnh0amR3ZHdqbGV1dHFwaWZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3ODI1ODEsImV4cCI6MjEwNzM1ODU4MX0.XPSItKDybyPeE4vwtMQuberFuvTLoHl5z6PNeFOHaKo'
   let supabaseClient = null;
   let supabaseClientPromise = null;
 
